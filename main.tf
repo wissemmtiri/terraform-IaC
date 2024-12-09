@@ -3,7 +3,7 @@
 #================================================================================================
 resource "azurerm_resource_group" "rg" {
   location = var.resource_group_location
-  name     = "app-service-rg"
+  name     = "tf-app-service-rg"
 }
 
 resource "azurerm_virtual_network" "vnet" {
