@@ -17,21 +17,6 @@ pipeline {
             }
         }
 
-        stage('Install Terraform') {
-            steps {
-                echo "Installing Terraform..."
-                sh '''
-                # Install Terraform (if not already installed)
-                if ! command -v terraform &> /dev/null; then
-                  curl -fsSL https://releases.hashicorp.com/terraform/1.10.1/terraform_1.10.1_linux_amd64.zip -o terraform.zip
-                  unzip terraform.zip
-                  sudo mv terraform /usr/local/bin/
-                  terraform --version
-                fi
-                '''
-            }
-        }
-
         stage('Terraform Init') {
             steps {
                 echo "Initializing Terraform..."

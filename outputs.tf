@@ -1,12 +1,3 @@
-output "jenkins_public_ip" {
-  value = azurerm_public_ip.jenkins-public-ip.ip_address
-}
-
-output "jenkins_ssh_private_key" {
-  value     = tls_private_key.jenkins-ssh.private_key_pem
-  sensitive = true
-}
-
 output "web_app_name" {
   value = azurerm_linux_web_app.linux_webapp.name
   description = "The name of the deployed web app"
