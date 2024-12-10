@@ -55,8 +55,6 @@ pipeline {
                     steps {
                         script {
                             sh '''
-                            wget https://github.com/aquasecurity/tfsec/releases/download/v1.28.1/tfsec-linux-amd64
-                            chmod +x tfsec-linux-amd64
                             ./tfsec-linux-amd64 .
                             '''
                         }
