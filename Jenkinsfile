@@ -45,10 +45,46 @@ pipeline {
             }
         }
 
+        stage('Save State Backup'){
+            steps {
+                echo "Saving state backup..."
+                sh '''
+                if [ -f terraform.tfstate ]; then
+                    mv terraform.tfstate terraform.tfstate.backup
+                else
+                    echo "No previous state file found to backup."
+                fi
+                '''
+            }
+        }
+
         stage('Terraform Apply') {
             steps {
                 echo "Applying Terraform changes..."
                 sh 'terraform apply plan.tfplan'
+            }
+            post {
+                failure {
+                    echo "Terraform apply failed. Initiating Rollback to previous state..."
+                    script {
+                        try {
+                            sh '''
+                            if [ -f terraform.tfstate.backup ]; then
+                                cp terraform.tfstate.backup terraform.tfstate
+                                terraform apply -refresh-only -auto-approve
+                            else
+                                echo "No state backup found. Rollback not possible."
+                            fi
+                            '''
+                        }
+                        catch (Exception e) {
+                            echo "Rollback failed. error: ${e.getMessage()}"
+                        }
+                    }
+                }
+                success {
+                    echo "Terraform changes applied successfully."
+                }
             }
         }
     }
