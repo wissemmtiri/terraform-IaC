@@ -16,5 +16,5 @@ output "jenkins_ip" {
 output "jenkins_ssh_key" {
   value       = tls_private_key.ssh.private_key_pem
   description = "The private SSH key for the Jenkins node"
-  sensitive = true
+  sensitive   = true
 }
