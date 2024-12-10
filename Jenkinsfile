@@ -84,6 +84,15 @@ pipeline {
                 }
                 success {
                     echo "Terraform changes applied successfully."
+                    mail to: 'mtiri.wissem99@gmail.com',
+                        subject: 'Terraform Changes Applied Successfully',
+                        body: """
+                        The Terraform changes have been applied successfully.
+
+                        Regards,
+                        Terraform Automation
+                        """
+
                 }
             }
         }
