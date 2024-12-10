@@ -3,7 +3,7 @@
 #================================================================================================
 resource "azurerm_resource_group" "rg" {
   location = var.resource_group_location
-  name     = "app-service-rg"
+  name     = "terraform-app-service-rg"
 }
 
 resource "azurerm_virtual_network" "vnet" {
@@ -32,7 +32,7 @@ resource "azurerm_service_plan" "asp" {
 }
 
 resource "azurerm_linux_web_app" "linux_webapp" {
-  name                = "MythoMorphosis-webapp"
+  name                = "terraform-webapp"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   service_plan_id     = azurerm_service_plan.asp.id
@@ -51,69 +51,6 @@ resource "azurerm_linux_web_app" "linux_webapp" {
   }
 
   public_network_access_enabled = true
-
-  tags = {
-    environment = var.environment
-  }
-}
-
-#================================================================================================
-#                                     JENKINS NODE
-#================================================================================================
-resource "azurerm_public_ip" "public-ip" {
-  name                = "public-ip"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-  allocation_method   = "Dynamic"
-  sku                 = "Basic"
-}
-
-resource "azurerm_network_interface" "nic" {
-  name                = "nic"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-
-  ip_configuration {
-    name                          = "nic-ip-config"
-    subnet_id                     = azurerm_subnet.subnet.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.public-ip.id
-  }
-}
-
-resource "tls_private_key" "ssh" {
-  algorithm = var.ssh_key_algorithm
-  rsa_bits  = var.ssh_key_size
-}
-
-resource "azurerm_linux_virtual_machine" "vm" {
-  name                  = "Jenkins-VM"
-  location              = azurerm_resource_group.rg.location
-  resource_group_name   = azurerm_resource_group.rg.name
-  network_interface_ids = [azurerm_network_interface.nic.id]
-  size                  = var.vm_size
-
-  os_disk {
-    name                 = "os-disk"
-    caching              = "ReadWrite"
-    storage_account_type = var.storage_account_type
-  }
-
-  source_image_reference {
-    publisher = var.source_image_publisher
-    offer     = var.source_image_offer
-    sku       = var.source_image_sku
-    version   = "latest"
-  }
-
-  computer_name                   = "jenkins"
-  admin_username                  = "wess"
-  disable_password_authentication = true
-
-  admin_ssh_key {
-    username   = var.admin_username
-    public_key = tls_private_key.ssh.public_key_openssh
-  }
 
   tags = {
     environment = var.environment
