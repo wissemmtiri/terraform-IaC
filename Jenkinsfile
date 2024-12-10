@@ -38,6 +38,33 @@ pipeline {
             }
         }
 
+        stage('Validate and Lint') {
+            parallel {
+                stage('Terraform Validate') {
+                    steps {
+                        script {
+                            sh '''
+                            terraform fmt -check=true -diff=true
+                            terraform validate
+                            '''
+                        }
+                    }
+                }
+                
+                stage('Security Scan') {
+                    steps {
+                        script {
+                            sh '''
+                            wget https://github.com/aquasecurity/tfsec/releases/download/v1.28.1/tfsec-linux-amd64
+                            chmod +x tfsec-linux-amd64
+                            ./tfsec-linux-amd64 .
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+
         stage('Terraform Plan') {
             steps {
                 echo "Planning Terraform changes..."
