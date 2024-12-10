@@ -1,0 +1,17 @@
+---
+- name: Update package cache
+  apt:
+    update_cache: yes
+    cache_valid_time: "{{ cache_valid_time }}"
+
+- name: Install Docker and Docker Compose
+  apt:
+    name: "{{ docker_packages }}"
+    state: present
+
+- name: Add current user to docker group
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes
+  when: ansible_user != 'root'

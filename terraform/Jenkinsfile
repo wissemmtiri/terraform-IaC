@@ -21,6 +21,7 @@ pipeline {
             steps {
                 echo "Initializing Terraform..."
                 sh '''
+                cd terraform
                 terraform init
                 '''
             }
@@ -44,6 +45,7 @@ pipeline {
                     steps {
                         script {
                             sh '''
+                            cd terraform
                             terraform fmt -check=true -diff=true
                             terraform validate
                             '''
@@ -66,7 +68,10 @@ pipeline {
         stage('Terraform Plan') {
             steps {
                 echo "Planning Terraform changes..."
-                sh 'terraform plan -out plan.tfplan'
+                sh '''
+                cd terraform
+                terraform plan -out plan.tfplan
+                '''
             }
         }
 
@@ -74,6 +79,7 @@ pipeline {
             steps {
                 echo "Saving state backup..."
                 sh '''
+                cd terraform
                 if [ -f terraform.tfstate ]; then
                     cp terraform.tfstate terraform.tfstate.backup
                 else
@@ -86,7 +92,10 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 echo "Applying Terraform changes..."
-                sh 'terraform apply plan.tfplan'
+                sh '''
+                cd terraform
+                terraform apply plan.tfplan
+                '''
             }
             post {
                 failure {
@@ -94,6 +103,7 @@ pipeline {
                     script {
                         try {
                             sh '''
+                            cd terraform
                             if [ -f terraform.tfstate.backup ]; then
                                 cp terraform.tfstate.backup terraform.tfstate
                                 terraform apply -refresh-only -auto-approve

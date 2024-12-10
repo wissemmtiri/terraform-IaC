@@ -1,0 +1,18 @@
+---
+- name: Pull Jenkins Docker image
+  docker_image:
+    name: "{{ jenkins_image }}"
+    source: pull
+
+- name: Start Jenkins server container
+  docker_container:
+    name: "{{ jenkins_container_name }}"
+    image: "{{ jenkins_image }}"
+    state: started
+    ports: "{{ jenkins_ports }}"
+    volumes: "{{ jenkins_volumes }}"
+    restart_policy: always
+    log_driver: "json-file"
+    log_options:
+      max-size: "10m"
+      max-file: "3"

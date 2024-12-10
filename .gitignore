@@ -1,3 +1,6 @@
 .terraform*
 *.tfstate*
 plan.tfplan
+.env*
+inventory.ini
+vars

@@ -1,0 +1,12 @@
+---
+- name: Apply Common Config to All Hosts
+  hosts: all
+  become: true
+  roles:
+    - common
+
+- name: Configure Jenkins Server
+  hosts: jenkins
+  become: true
+  roles:
+    - jenkins
