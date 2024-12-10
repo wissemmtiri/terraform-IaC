@@ -41,7 +41,7 @@ resource "azurerm_linux_web_app" "linux_webapp" {
     always_on = false
 
     application_stack {
-      docker_image_name = "mtiriwissem/mytho-front:2.0"
+      docker_image_name = "nginx:latest"
       docker_registry_url = "https://index.docker.io"
     }
   }
