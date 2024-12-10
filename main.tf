@@ -41,8 +41,7 @@ resource "azurerm_linux_web_app" "linux_webapp" {
     always_on = false
 
     application_stack {
-      docker_image_name = "nginx:latest"
-      #mtiriwissem/mytho-front:2.0
+      docker_image_name = "mtiriwissem/mytho-front:2.0"
       docker_registry_url = "https://index.docker.io"
     }
   }
@@ -59,7 +58,7 @@ resource "azurerm_linux_web_app" "linux_webapp" {
 }
 
 # #================================================================================================
-# #                                     MONITORING NODE
+# #                                     SIDECAR NODE
 # #================================================================================================
 # resource "azurerm_public_ip" "public-ip" {
 #   name                = "public-ip"
@@ -88,7 +87,7 @@ resource "azurerm_linux_web_app" "linux_webapp" {
 # }
 
 # resource "azurerm_linux_virtual_machine" "vm" {
-#   name                  = "Monitoring-VM"
+#   name                  = "SideCar-VM"
 #   location              = azurerm_resource_group.rg.location
 #   resource_group_name   = azurerm_resource_group.rg.name
 #   network_interface_ids = [azurerm_network_interface.nic.id]
@@ -107,7 +106,7 @@ resource "azurerm_linux_web_app" "linux_webapp" {
 #     version   = "latest"
 #   }
 
-#   computer_name                   = "mon"
+#   computer_name                   = "sc"
 #   admin_username                  = "wess"
 #   disable_password_authentication = true
 
