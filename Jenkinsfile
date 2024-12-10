@@ -50,7 +50,7 @@ pipeline {
                 echo "Saving state backup..."
                 sh '''
                 if [ -f terraform.tfstate ]; then
-                    mv terraform.tfstate terraform.tfstate.backup
+                    cp terraform.tfstate terraform.tfstate.backup
                 else
                     echo "No previous state file found to backup."
                 fi
