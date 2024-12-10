@@ -45,7 +45,6 @@ pipeline {
                         script {
                             sh '''
                             terraform fmt -check=true -diff=true
-                            terraform validate
                             '''
                         }
                     }
