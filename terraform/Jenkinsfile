@@ -57,7 +57,8 @@ pipeline {
                     steps {
                         script {
                             sh '''
-                            ./tfsec-linux-amd64 .
+                            cd terraform
+                            tfsec .
                             '''
                         }
                     }
